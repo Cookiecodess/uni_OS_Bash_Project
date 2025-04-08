@@ -83,8 +83,9 @@ done
 read -p "Please select a choice:" key
 
 echo -e "\t\t ${choices[$key]}!"
-echo -e "\t\t========================\n"
+echo -e "\t\t========================"
      if [ "$key" == "A" ];
+     #     if [ "$key" == "A" ] || [ "$key" == "a" ];
          then addNew
      fi
 
