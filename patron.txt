@@ -1,3 +1,5 @@
 PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate
-
-aa:12:aa:11:aas:111:sss
+sss:s:ss:012-7777777:01-00-0000:student:11-11-1111
+ww:w:w:011-1111111:11-11-1111:Student:11-11-1111
+swd:w:wd:011-1111111:11-11-1111:Student:11-11-1111
+11:11:1:011-1111111:11-11-1111:Student:11-11-1111
