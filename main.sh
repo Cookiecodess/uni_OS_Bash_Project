@@ -4,7 +4,10 @@ echo -e "\t\t ${choices[$key]}!"
 echo -e "\t\t========================"
 
 }
-
+function waitMessage() {
+    echo -e "\nPress any key to continue..."
+    read -n1 -s
+}
 function addNew() {
     continue="y"
     while [[ "$continue" == "y" ]] do
@@ -124,7 +127,8 @@ key=${key^^}
 
     else
         echo "Invalid choice: $key"
-    
+        waitMessage
+    menu
      
      
      
