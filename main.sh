@@ -1,3 +1,9 @@
+function printHeader(){
+    clear
+echo -e "\t\t ${choices[$key]}!"
+echo -e "\t\t========================"
+
+}
 
 function addNew() {
     continue="y"
@@ -46,6 +52,7 @@ function addNew() {
             # fi
         #echo -e "PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate">>patron.txt
         echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate">>patron.txt
+    menu
     done
 
 }
@@ -57,7 +64,8 @@ function addNew() {
 
 
 
-
+function menu(){
+    clear
 echo "Patron Maintenance Menu"
 declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
 declare -A choices
@@ -82,10 +90,46 @@ done
 
 read -p "Please select a choice:" key
 
-echo -e "\t\t ${choices[$key]}!"
-echo -e "\t\t========================"
+key=${key^^}
+
+
+
      if [ "$key" == "A" ];
      #     if [ "$key" == "A" ] || [ "$key" == "a" ];
-         then addNew
+   
+         then   printHeader
+         addNew
+
+    
+     elif [ "$key" == "S" ]; then
+        printHeader
+    
+     elif [ "$key" == "U" ]; then
+        printHeader
+    
+     elif [ "$key" == "D" ]; then
+        printHeader
+    
+    
+         elif [ "$key" == "L" ]; then
+        printHeader
+     elif [ "$key" == "P" ]; then
+        printHeader
+         elif [ "$key" == "J" ]; then
+        printHeader
+        
+   elif [ "$key" == "Q" ]; then
+        echo -e "\nGoodbye!"
+        exit 0
+
+    else
+        echo "Invalid choice: $key"
+    
+     
+     
+     
      fi
+}
+
+menu
 
