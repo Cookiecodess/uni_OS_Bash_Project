@@ -63,6 +63,108 @@ function addNew() {
 
 
 
+function searchPatron(){
+	clear
+	echo "Search Patron Details"
+	read -p "Enter Patron ID: " id
+	id=${id^^}
+	line=$(grep "^$id:" patron.txt)
+	
+	#if line found
+	if [[ -n "$line" ]]; then
+		IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+		
+		clear
+		
+		echo "Patron Found!"
+		echo "==========================="
+		echo "Patron ID: $id"
+		echo "First Name: $fname"
+		echo "Last Name: $lname"
+		echo "Mobile Number: $phone"
+		echo "Birth Date (DD-MM-YYYY): $bdate"
+		echo "Membership Type (Student/Public): $member"
+		echo "Joined Date (DD-MM-YYYY): $jdate"
+	else	
+		clear
+		echo "No Patron with ID $id Found!"
+	fi
+	
+	printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
+	if [[ "${choice,,}" == "y" ]]; then
+		searchPatron
+	fi
+	echo ""
+}
+
+
+function updatePatron(){
+	clear
+	echo "Update a Patron Details"
+	read -p "Enter Patron ID: " id
+	id=${id^^}
+	
+	line=$(grep "^$id:" patron.txt)
+	
+	#if line found
+	if [[ -n "$line" ]]; then
+		IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+		
+		clear
+		
+		echo "Patron Found!"
+		echo "==========================="
+		echo "Patron ID: $id"
+		echo "First Name: $fname"
+		echo "Last Name: $lname"
+		read -e -i $phone -p "Mobile Number: " newphone
+		
+		while true; do
+			read -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
+			if [[ $newdate =~ ^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$ ]]; then
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Mobile Number: $newphone"
+				echo "Birth Date (DD-MM-YYYY): $newdate"
+				break
+			else
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Mobile Number: $newphone"
+				echo "Invalid Date Format!"
+			fi
+		done
+		
+		echo "Membership Type (Student/Public): $member"
+		echo "Joined Date (DD-MM-YYYY): $jdate"
+		
+		printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+		read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
+		if [[ "${choice,,}" == "y" ]]; then
+			sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
+		fi
+		
+	else	
+		clear
+		echo "No Patron with ID $id Found!"
+		printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+		read -n 1 -s
+	fi
+	
+	
+}
 
 
 
