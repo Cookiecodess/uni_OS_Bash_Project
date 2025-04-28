@@ -1,7 +1,7 @@
 function printHeader(){
     clear
 echo -e "\t\t ${choices[$key]}!"
-echo -e "\t\t========================"
+echo -e "==================================="
 
 }
 function waitMessage() {
@@ -64,8 +64,10 @@ function addNew() {
 
 
 function searchPatron(){
-	clear
-	echo "Search Patron Details"
+	# clear
+	# echo "Search Patron Details"
+	 continue="y"
+    while [[ "$continue" == "y" ]] do
 	read -p "Enter Patron ID: " id
 	id=${id^^}
 	line=$(grep "^$id:" patron.txt)
@@ -92,17 +94,19 @@ function searchPatron(){
 	
 	printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 	
-	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
-	if [[ "${choice,,}" == "y" ]]; then
-		searchPatron
-	fi
-	echo ""
+	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " continue
+	# if [[ "${choice,,}" == "y" ]]; then
+	# 	searchPatron
+	# fi
+	# echo ""
+	menu
+    done
 }
 
 
 function updatePatron(){
-	clear
-	echo "Update a Patron Details"
+	# clear
+	# echo "Update a Patron Details"
 	read -p "Enter Patron ID: " id
 	id=${id^^}
 	
@@ -208,10 +212,10 @@ key=${key^^}
     
      elif [ "$key" == "S" ]; then
         printHeader
-    
+    searchPatron
      elif [ "$key" == "U" ]; then
         printHeader
-    
+    updatePatron
      elif [ "$key" == "D" ]; then
         printHeader
     
