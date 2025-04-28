@@ -66,9 +66,7 @@ function addNew() {
 function searchPatron(){
 	# clear
 	# echo "Search Patron Details"
-	 continue="y"
-    while [[ "$continue" == "y" ]] do
-	read -p "Enter Patron ID: " id
+read -p "Enter Patron ID: " id
 	id=${id^^}
 	line=$(grep "^$id:" patron.txt)
 	
@@ -94,12 +92,14 @@ function searchPatron(){
 	
 	printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 	
-	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " continue
-	# if [[ "${choice,,}" == "y" ]]; then
-	# 	searchPatron
-	# fi
-	# echo ""
+	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
+	if [[ "${choice,,}" == "y" ]]; then
+		searchPatron
+	elif[[ "${choice,,}" == "q" ]]; then
 	menu
+	fi
+	
+	# echo ""
     done
 }
 
@@ -157,6 +157,8 @@ function updatePatron(){
 		read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
 		if [[ "${choice,,}" == "y" ]]; then
 			sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
+		elif[[ "${choice,,}" == "q" ]]; then
+		menu
 		fi
 		
 	else	
