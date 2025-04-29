@@ -95,7 +95,7 @@ read -p "Enter Patron ID: " id
 	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
 	if [[ "${choice,,}" == "y" ]]; then
 		searchPatron
-	elif[[ "${choice,,}" == "q" ]]; then
+	elif [[ "${choice,,}" == "q" ]]; then
 	menu
 	fi
 	
@@ -157,7 +157,7 @@ function updatePatron(){
 		read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
 		if [[ "${choice,,}" == "y" ]]; then
 			sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
-		elif[[ "${choice,,}" == "q" ]]; then
+		elif [[ "${choice,,}" == "q" ]]; then
 		menu
 		fi
 		
