@@ -123,7 +123,28 @@ function updatePatron(){
 		echo "Patron ID: $id"
 		echo "First Name: $fname"
 		echo "Last Name: $lname"
-		read -e -i $phone -p "Mobile Number: " newphone
+  
+		while true; do
+			read -e -i $phone -p "Mobile Number: " newphone
+			if [[ $newphone =~ (^01[2-9]-[0-9]{7}$)|(^011-[0-9]{8}$) ]]; then
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Mobile Number: $newphone"
+				break
+			else
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Invalid Phone Format!"
+			fi
+		done
 		
 		while true; do
 			read -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
