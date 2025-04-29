@@ -1,7 +1,7 @@
 function printHeader(){
     clear
-echo -e "\t\t ${choices[$key]}!"
-echo -e "==================================="
+echo -e "\t ${choices[$key]}!"
+echo -e "===================================================="
 
 }
 function waitMessage() {
@@ -9,6 +9,7 @@ function waitMessage() {
     read -n1 -s
 }
 function addNew() {
+     printHeader
     continue="y"
     while [[ "$continue" == "y" ]] do
         read -p "Patron ID:" pID
@@ -66,6 +67,7 @@ function addNew() {
 function searchPatron(){
 	# clear
 	# echo "Search Patron Details"
+    printHeader
 	 continue="y"
     while [[ "$continue" == "y" ]] do
 	read -p "Enter Patron ID: " id
@@ -76,10 +78,10 @@ function searchPatron(){
 	if [[ -n "$line" ]]; then
 		IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
 		
-		clear
+		# clear
 		
-		echo "Patron Found!"
-		echo "==========================="
+		# echo "Patron Found!"
+		# echo "==========================="
 		echo "Patron ID: $id"
 		echo "First Name: $fname"
 		echo "Last Name: $lname"
@@ -94,11 +96,10 @@ function searchPatron(){
 	
 	printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 	
-	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " continue
-	# if [[ "${choice,,}" == "y" ]]; then
-	# 	searchPatron
-	# fi
-	# echo ""
+	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
+	if [[ "${choice,,}" == "y" ]]; then
+		searchPatron
+	fi
 	menu
     done
 }
@@ -107,6 +108,7 @@ function searchPatron(){
 function updatePatron(){
 	# clear
 	# echo "Update a Patron Details"
+     printHeader
 	read -p "Enter Patron ID: " id
 	id=${id^^}
 	
@@ -118,8 +120,8 @@ function updatePatron(){
 		
 		clear
 		
-		echo "Patron Found!"
-		echo "==========================="
+		# echo "Patron Found!"
+		# echo "==========================="
 		echo "Patron ID: $id"
 		echo "First Name: $fname"
 		echo "Last Name: $lname"
@@ -166,7 +168,8 @@ function updatePatron(){
 	
 		read -n 1 -s
 	fi
-	
+	menu
+    
 	
 }
 
@@ -206,15 +209,15 @@ key=${key^^}
      if [ "$key" == "A" ];
      #     if [ "$key" == "A" ] || [ "$key" == "a" ];
    
-         then   printHeader
+         then   
          addNew
 
     
      elif [ "$key" == "S" ]; then
-        printHeader
+        
     searchPatron
      elif [ "$key" == "U" ]; then
-        printHeader
+        
     updatePatron
      elif [ "$key" == "D" ]; then
         printHeader
