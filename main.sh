@@ -1,3 +1,33 @@
+
+# color
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033[34m'
+CYAN='\033[36m'
+RESET='\033[0m'
+
+# password and name
+CORRECT_USER="admin"
+CORRECT_PASS="123456"
+
+#only can this few time to login fail
+MAX_ATTEMPTS=3
+attempts=0
+
+# sound
+beep() {
+    echo -e "\a"
+    sleep $1
+}
+
+# login page
+
+
+
+
+
+
 function printHeader(){
     clear
 echo -e "\t ${choices[$key]}!"
@@ -178,7 +208,9 @@ function updatePatron(){
 
 function menu(){
     clear
-echo "Patron Maintenance Menu"
+    echo -e "${GREEN}==========================================================="
+echo -e "\t Patron Maintenance Menu"
+echo -e "===========================================================${RESET}"
 declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
 declare -A choices
 choices["A"]="Add New Patron Details"
@@ -244,5 +276,74 @@ key=${key^^}
      fi
 }
 
-menu
 
+function login(){
+clear
+echo -e "${CYAN}======================================="
+echo -e "      Welcome to Linux Secure Login     "
+echo -e "=======================================${RESET}"
+echo
+
+while [ $attempts -lt $MAX_ATTEMPTS ]; do
+    echo -ne "${BLUE}Username: ${RESET}"    #n = no next line
+    read username
+
+    echo -ne "${BLUE}Password: ${RESET}"
+    read -s password    #hiden the password
+    echo
+
+    echo -e "${YELLOW}Verifying credentials...${RESET}"
+    sleep 2
+
+    if [[ "$username" == "$CORRECT_USER" && "$password" == "$CORRECT_PASS" ]]; then
+        echo
+        echo -e "${GREEN}======================================="
+        echo -e "Login successful. Welcome, $username!"
+        echo -e "=======================================${RESET}"
+
+        # a long sound
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.4
+        sleep 0.3
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.4
+
+        echo
+        echo -e "${CYAN}Enjoy your session!${RESET}"
+        menu
+    else
+        echo
+        echo -e "${RED}Login failed: Incorrect username or password.${RESET}"
+        attempts=$((attempts+1))
+        if [ $attempts -lt $MAX_ATTEMPTS ]; then
+            echo -e "${YELLOW}Please try again. Attempts left: $((MAX_ATTEMPTS - attempts))${RESET}"
+            echo
+            sleep 1
+        fi
+    fi
+done
+
+echo
+echo -e "${RED}======================================="
+echo -e "Account locked due to too many failed attempts."
+echo -e "Please contact the system administrator."
+echo -e "=======================================${RESET}"
+exit 1
+
+
+
+
+}
+
+
+
+#menu
+
+login
