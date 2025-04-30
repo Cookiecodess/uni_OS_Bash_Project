@@ -46,3 +46,10 @@ echo $result2
 
 # if []
 # comment
+
+str="hello world"
+if [ "$str" == "hello world" ]; then
+    echo "yes"
+else
+    echo "no"
+fi 
