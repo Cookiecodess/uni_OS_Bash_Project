@@ -9,7 +9,7 @@ RESET='\033[0m'
 
 # password and name
 CORRECT_USER="admin"
-CORRECT_PASS="123456"
+CORRECT_PASS="123"
 
 #only can this few time to login fail
 MAX_ATTEMPTS=3
@@ -81,6 +81,12 @@ function addNew() {
 
         echo "Press (q) to return to Patron Maintenance Menu."
         read -p "Add another new patron details? (y)es or (q)uit :" continue
+           while ! [[ "$continue" == "y" || "$continue" == "q" ]]; do
+                echo -e "Sorry you selection is invalid.Please try again."
+                read -p "Press (q) to return to Patron Maintenance Menu." continue
+            done  
+           
+           
             #  if [ "$continue" == "q" ];
             #     then echo "yes"
             # fi
