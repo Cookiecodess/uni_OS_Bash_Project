@@ -8,50 +8,50 @@ function printHeader(){
 }
 function waitMessage() {
     echo -e "\nPress any key to continue..."
-    read -n1 -s
+    read -r -n1 -s
 }
 function addNew() {
     continue="y"
     while [[ "$continue" == "y" ]]; do
-        read -p "Patron ID:" pID
+        read -r -p "Patron ID:" pID
         while [[ -z "$pID" ]]; do
             echo -e "Sorry the Patron ID cannot left blank."
-            read -p "Patron ID:" pID
+            read -r -p "Patron ID:" pID
         done
-        read -p "First Name:" fname
+        read -r -p "First Name:" fname
         while [[ -z "$fname" ]]; do
             echo -e "Sorry the First Name cannot left blank."
-            read -p "First Name:" fname
+            read -r -p "First Name:" fname
         done
-        read -p "Last Name:" lname
+        read -r -p "Last Name:" lname
         while [[ -z "$lname" ]]; do
             echo -e "Sorry the Last Name cannot left blank."
-            read -p "Last Name:" lname
+            read -r -p "Last Name:" lname
         done
-        read -p "Mobile Number(01#-########):" phnum
+        read -r -p "Mobile Number(01#-########):" phnum
         while ! [[ "$phnum" =~ ^01[0-9]{1}-[0-9]{7,8}$ ]]; do
             echo -e "Sorry the Phone Number Format is wrong."
-            read -p "Mobile Number:" phnum
+            read -r -p "Mobile Number:" phnum
         done
-        read -p "Birth Date (MM-DD-YYYY):" bdate
+        read -r -p "Birth Date (MM-DD-YYYY):" bdate
         while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Birth Date Format is wrong."
-            read -p "Birth Date (MM-DD-YYYY):" bdate
+            read -r -p "Birth Date (MM-DD-YYYY):" bdate
         done     
-        read -p "Membership type (Student / Public):" memberType
+        read -r -p "Membership type (Student / Public):" memberType
         while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
 
             echo -e "Sorry Please Select (Student/Public)."
-            read -p "Membership type (Student / Public):" memberType
+            read -r -p "Membership type (Student / Public):" memberType
         done
-        read -p "Joined Date (MM-DD-YYYY):" joinedDate
+        read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
         while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Joined Date Format is wrong."
-            read -p "Joined Date (MM-DD-YYYY):" joinedDate
+            read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
         done 
 
         echo "Press (q) to return to Patron Maintenance Menu."
-        read -p "Add another new patron details? (y)es or (q)uit :" continue
+        read -r -p "Add another new patron details? (y)es or (q)uit :" continue
         #  if [ "$continue" == "q" ];
         #     then echo "yes"
         # fi
@@ -68,13 +68,13 @@ function addNew() {
 function searchPatron(){
     # clear
     # echo "Search Patron Details"
-    read -p "Enter Patron ID: " id
+    read -r -p "Enter Patron ID: " id
     id=${id^^}
     line=$(grep "^$id:" patron.txt)
 
     #if line found
     if [[ -n "$line" ]]; then
-        IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+        IFS=: read -r -r id fname lname phone bdate member jdate <<< "$line"
 
         clear
 
@@ -94,7 +94,7 @@ function searchPatron(){
 
     printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 
-    read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
+    read -r -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
     if [[ "${choice,,}" == "y" ]]; then
         searchPatron
     elif [[ "${choice,,}" == "q" ]]; then
@@ -109,14 +109,14 @@ function searchPatron(){
 function updatePatron(){
     # clear
     # echo "Update a Patron Details"
-    read -p "Enter Patron ID: " id
+    read -r -p "Enter Patron ID: " id
     id=${id^^}
 
     line=$(grep "^$id:" patron.txt)
 
     #if line found
     if [[ -n "$line" ]]; then
-        IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+        IFS=: read -r -r id fname lname phone bdate member jdate <<< "$line"
 
         clear
 
@@ -127,7 +127,7 @@ function updatePatron(){
         echo "Last Name: $lname"
 
         while true; do
-            read -e -i $phone -p "Mobile Number: " newphone
+            read -r -e -i $phone -p "Mobile Number: " newphone
             if [[ $newphone =~ (^01[2-9]-[0-9]{7}$)|(^011-[0-9]{8}$) ]]; then
                 clear
                 echo "Patron Found!"
@@ -149,7 +149,7 @@ function updatePatron(){
         done
 
         while true; do
-            read -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
+            read -r -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
             if [[ $newdate =~ ^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$ ]]; then
                 clear
                 echo "Patron Found!"
@@ -177,7 +177,7 @@ function updatePatron(){
 
         printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 
-        read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
+        read -r -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
         if [[ "${choice,,}" == "y" ]]; then
             sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
         elif [[ "${choice,,}" == "q" ]]; then
@@ -189,7 +189,7 @@ function updatePatron(){
         echo "No Patron with ID $id Found!"
         printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 
-        read -n 1 -s
+        read -r -n 1 -s
     fi
 
 
@@ -222,7 +222,7 @@ for key in "${keys[@]}"; do
 
 done
 
-read -p "Please select a choice:" key
+read -r -p "Please select a choice:" key
 
 key=${key^^}
 
