@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function printHeader(){
     clear
     echo -e "\t\t ${choices[$key]}!"
@@ -100,7 +102,7 @@ function searchPatron(){
     fi
 
     # echo ""
-done
+# done
 }
 
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # read -p "Whats your name? " var
 # echo $var
 number=$((1 + 5))
