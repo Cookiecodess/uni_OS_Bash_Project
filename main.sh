@@ -324,7 +324,7 @@ function menu() {
                 updatePatron
                 ;;
             3)
-                ./delete_patron.sh
+                bash delete_patron.sh 
                 ;;
             4)
                 ./sort_by_lastname.sh

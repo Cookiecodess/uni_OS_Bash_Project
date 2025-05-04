@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Include guard
-if [[ -n "$__UTILS_SH_INCLUDED__" ]]; then
-    # If sourced in another script: return, else (probably ran directly in cli): exit
-    [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return || exit 0
-fi
-export __UTILS_SH_INCLUDED__=true
+# if [[ -n "$__UTILS_SH_INCLUDED__" ]]; then
+#     # If sourced in another script: return, else (probably ran directly in cli): exit
+#     [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return || exit 0
+# fi
+# export __UTILS_SH_INCLUDED__=true
 
 # color constants
 RED='\033[31m'
