@@ -42,12 +42,12 @@ function addNew() {
         read -r -p "Patron ID (format P****): " pID
 
         if [[ ! "$pID" =~ ^P[0-9]{4}$ ]]; then
-            echo -e "Invalid Patron ID format. Please use 'P****' format."
+            echo -e "${RED}Invalid Patron ID format. Please use 'P****' format.${RESET}"
             continue
         fi
 
         if grep -q "^$pID:" "$PATRON_FILE"; then
-            echo -e "Patron ID already exists."
+            echo -e "${RED}Patron ID already exists.${RESET}"
             continue
         fi
 
@@ -55,40 +55,40 @@ function addNew() {
     done
         read -r -p "First Name:" fname
         while [[ -z "$fname" ]]; do
-            echo -e "Sorry the First Name cannot left blank."
+            echo -e "${RED}Sorry the First Name cannot left blank.${RESET}"
             read -r -p "First Name:" fname
         done
         read -r -p "Last Name:" lname
         while [[ -z "$lname" ]]; do
-            echo -e "Sorry the Last Name cannot left blank."
+            echo -e "${RED}Sorry the Last Name cannot left blank.${RESET}"
             read -r -p "Last Name:" lname
         done
         read -r -p "Mobile Number(01#-########):" phnum
         while ! [[ "$phnum" =~ ^01[0-9]{1}-[0-9]{7,8}$ ]]; do
-            echo -e "Sorry the Phone Number Format is wrong."
+            echo -e "${RED}Sorry the Phone Number Format is wrong.${RESET}"
             read -r -p "Mobile Number:" phnum
         done
         read -r -p "Birth Date (MM-DD-YYYY):" bdate
         while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
-            echo -e "Sorry the Birth Date Format is wrong."
+            echo -e "${RED}Sorry the Birth Date Format is wrong.${RESET}"
             read -r -p "Birth Date (MM-DD-YYYY):" bdate
         done
         read -r -p "Membership type (Student / Public):" memberType
         while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
 
-            echo -e "Sorry Please Select (Student/Public)."
+            echo -e "${RED}Sorry Please Select (Student/Public).${RESET}"
             read -r -p "Membership type (Student / Public):" memberType
         done
         read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
         while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
-            echo -e "Sorry the Joined Date Format is wrong."
+            echo -e "${RED}Sorry the Joined Date Format is wrong.${RESET}"
             read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
         done
 
         echo "Press (q) to return to Patron Maintenance Menu."
         read -p "Add another new patron details? (y)es or (q)uit :" continue
         while ! [[ "$continue" == "y" || "$continue" == "q" ]]; do
-            echo -e "Sorry you selection is invalid.Please try again."
+            echo -e "${RED}Sorry you selection is invalid.Please try again.${RESET}"
             read -p "Press (q) to return to Patron Maintenance Menu." continue
         done
 
@@ -222,9 +222,8 @@ function updatePatron() {
             read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or press any key to quit: " choice
             if [[ "${choice,,}" == "y" ]]; then
                 sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
-            # elif [[ "${choice,,}" == "q" ]]; then
-            #     menu
             fi
+	    choice="q"
 
         else
             clear
