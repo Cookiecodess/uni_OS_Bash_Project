@@ -339,6 +339,7 @@ function menu() {
                 ;;
             7)
                 echo "Goodbye!"
+                exit 1
                 break
                 ;;
             *)
@@ -411,6 +412,6 @@ function login() {
 
 }
 
-menu
+# menu
 
-# login
+login
