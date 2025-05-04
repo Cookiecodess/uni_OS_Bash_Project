@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # color
 RED='\033[31m'
