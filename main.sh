@@ -1,5 +1,9 @@
 #!/bin/bash
 
+source ./utils.sh
+
+# printHeader(), waitMessage(), beep() are now defined in utils.sh
+
 # color
 RED='\033[31m'
 GREEN='\033[32m'
@@ -16,11 +20,7 @@ CORRECT_PASS="123"
 MAX_ATTEMPTS=3
 attempts=0
 
-# sound
-beep() {
-    echo -e "\a"
-    sleep "$1"
-}
+
 
 # login page
 
@@ -31,45 +31,13 @@ beep() {
 
 # }
 
-function printHeader() {
-    local header="$1"
-    local color="${2:-}"       # optional: if not passed in, just print plain
-    local width="${3:-50}"     # default width is 28 unless caller says otherwise
 
-    # if header is longer than the box, make the box bigger
-    if (( width < ${#header} )); then
-        width=$(( ${#header} + 4 ))  # add some breathing room
-    fi
-
-    # make the top/bottom border: just a row of '=' chars
-    local border=$(printf '=%.0s' $(seq 1 "$width"))
-
-    # figure out how many spaces to put before the header to center it
-    local padding=$(( (width - ${#header}) / 2 ))
-    local spaces=$(printf '%*s' "$padding" '')
-
-    # if color is passed, use it for borders and header
-    if [[ -n "$color" ]]; then
-        echo -e "${color}${border}\033[0m"
-        echo -e "${spaces}${color}${header}\033[0m"
-        echo -e "${color}${border}\033[0m"
-    else
-        echo "$border"
-        echo "${spaces}${header}"
-        echo "$border"
-    fi
-}
-
-
-function waitMessage() {
-    echo -e "\nPress any key to continue..."
-    read -r -n1 -s
-}
 function addNew() {
 
     continue="y"
     while [[ "$continue" == "y" ]]; do
-        printHeader "${choices[$key]}" 
+        clear
+        printHeader "Add New Patron Details" 
         read -r -p "Patron ID:" pID
         while [[ -z "$pID" ]]; do
             echo -e "Sorry the Patron ID cannot left blank."
@@ -127,7 +95,8 @@ function addNew() {
 function searchPatron() {
     # clear
     # echo "Search Patron Details"
-    printHeader "${choices[$key]}"
+    clear
+    printHeader "Search Patron Details"
     continue="y"
     while [[ "$continue" == "y" ]]; do
         read -r -p "Enter Patron ID: " id
@@ -171,7 +140,8 @@ function updatePatron() {
     # echo "Update a Patron Details"
     choice="y"
     while [[ "$choice" == "y" ]]; do
-        printHeader "${choices[$key]}"
+        clear
+        printHeader "Update a Patron Details"
 
         # clear
         # echo "Update a Patron Details"
@@ -264,64 +234,116 @@ function updatePatron() {
 
 }
 
+# function menu() {
+#     while true; do
+#         clear
+#         echo -e "${GREEN}==========================================================="
+#         echo -e "\t Patron Maintenance Menu"
+#         echo -e "===========================================================${RESET}"
+#         declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
+#         declare -A choices
+#         choices["A"]="Add New Patron Details"
+#         choices["S"]="Search a Patron (by Patron ID)"
+#         choices["U"]="Update a Patron Details"
+#         choices["D"]="Delete a Patron Details"
+#         choices["L"]="Sort Patrons by Last Name"
+#         choices["P"]="Sort Patrons by Patron ID"
+#         choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
+#         choices["Q"]="Exit from Program"
+
+#         for key in "${keys[@]}"; do
+#             if [ "$key" == "Q" ]; then
+#                 echo -e ""
+#             fi
+#             echo "$key - ${choices[$key]}"
+
+#         done
+
+#         read -r -p "Please select a choice:" key
+
+#         key=${key^^}
+
+#         if [ "$key" == "A" ]; then #     if [ "$key" == "A" ] || [ "$key" == "a" ];
+#             addNew
+
+#         elif [ "$key" == "S" ]; then
+
+#             searchPatron
+
+#         elif [ "$key" == "U" ]; then
+
+#             updatePatron
+#         elif [ "$key" == "D" ]; then
+#             ./delete_patron.sh
+
+#         elif [ "$key" == "L" ]; then
+#             clear
+#             printHeader "${choices[$key]}"
+#         elif [ "$key" == "P" ]; then
+#             clear
+#             printHeader "${choices[$key]}"
+#         elif [ "$key" == "J" ]; then
+#             clear
+#             printHeader "${choices[$key]}"
+
+#         elif [ "$key" == "Q" ]; then
+#             echo -e "\nGoodbye!"
+#             exit 0
+
+#         else
+#             echo "Invalid choice: $key"
+#             waitMessage
+#             # menu
+#         fi
+#     done
+# }
+
 function menu() {
-    clear
-    echo -e "${GREEN}==========================================================="
-    echo -e "\t Patron Maintenance Menu"
-    echo -e "===========================================================${RESET}"
-    declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
-    declare -A choices
-    choices["A"]="Add New Patron Details"
-    choices["S"]="Search a Patron (by Patron ID)"
-    choices["U"]="Update a Patron Details"
-    choices["D"]="Delete a Patron Details"
-    choices["L"]="Sort Patrons by Last Name"
-    choices["P"]="Sort Patrons by Patron ID"
-    choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
-    choices["Q"]="Exit from Program"
+    source ./menu.sh
+    main_menu_options=(
+        "Add New Patron Details"
+        "Search a Patron (by Patron ID)"
+        "Update a Patron Details"
+        "Delete a Patron Details"
+        "Sort Patrons by Last Name"
+        "Sort Patrons by Patron ID"
+        "Sort Patrons by Joined Date (Newest to Oldest Date)\n"
+        "Exit from Program"
+    )
 
-    for key in "${keys[@]}"; do
-        if [ "$key" == "Q" ]; then
-            echo -e ""
-        fi
-        echo "$key - ${choices[$key]}"
-
+    while true; do
+        draw_menu "Patron Maintenance Menu" "${GREEN}" "${main_menu_options[@]}" 
+        case "$SELECTED" in
+            0)
+                addNew
+                ;;
+            1)
+                searchPatron
+                ;;
+            2)
+                updatePatron
+                ;;
+            3)
+                ./delete_patron.sh
+                ;;
+            4)
+                ./sort_by_lastname.sh
+                ;;
+            5)
+                ./sort_by_id.sh
+                ;;
+            6)
+                ./sort_by_joined_date.sh
+                ;;
+            7)
+                echo "Goodbye!"
+                break
+                ;;
+            *)
+                TEMP_MESSAGE="Invalid selection: $SELECTED"
+                ;;
+        esac
     done
-
-    read -r -p "Please select a choice:" key
-
-    key=${key^^}
-
-    if [ "$key" == "A" ]; then #     if [ "$key" == "A" ] || [ "$key" == "a" ];
-        addNew
-
-    elif [ "$key" == "S" ]; then
-
-        searchPatron
-
-    elif [ "$key" == "U" ]; then
-
-        updatePatron
-    elif [ "$key" == "D" ]; then
-        printHeader "${choices[$key]}"
-
-    elif [ "$key" == "L" ]; then
-        printHeader "${choices[$key]}"
-    elif [ "$key" == "P" ]; then
-        printHeader "${choices[$key]}"
-    elif [ "$key" == "J" ]; then
-        printHeader "${choices[$key]}"
-
-    elif [ "$key" == "Q" ]; then
-        echo -e "\nGoodbye!"
-        exit 0
-
-    else
-        echo "Invalid choice: $key"
-        waitMessage
-        menu
-
-    fi
 }
 
 function login() {
@@ -330,7 +352,7 @@ function login() {
     # echo -e "      Welcome to Linux Secure Login     "
     # echo -e "=======================================${RESET}"
     printHeader "Welcome to Linux Secure Login" "${CYAN}"
-    echo
+    # echo
 
     while [ $attempts -lt $MAX_ATTEMPTS ]; do
         echo -ne "${BLUE}Username: ${RESET}" #n = no next line
@@ -387,6 +409,6 @@ function login() {
 
 }
 
-#menu
+menu
 
-login
+# login

@@ -1,7 +1,17 @@
 #!/bin/bash
 
+# Include guard
+if [[ -n "$__MENU_SH_INCLUDED__" ]]; then
+    # If sourced in another script: return, else (probably ran directly in cli): exit
+    [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return || exit 0
+fi
+export __MENU_SH_INCLUDED__=true
+
+source utils.sh
+
 # Customization vars
 HEADER_TEXT=""
+HEADER_COLOR=""
 SHOW_HEADER=true
 TEMP_MESSAGE=""
 SHOW_TEMP_MESSAGE=false
@@ -45,7 +55,7 @@ menu_draw_items() {
         if [[ $i -eq $SELECTED ]]; then
             echo -e "\033[7m$MENU_PROMPT ${MENU_ITEMS[$i]}\033[0m"
         else
-            echo "  ${MENU_ITEMS[$i]}"
+            echo -e "  ${MENU_ITEMS[$i]}"
         fi
     done
 }
@@ -64,7 +74,8 @@ menu_loop() {
     while true; do
         clear # clear screen
         # menu_draw_header
-        menu_draw_fancy_header "$HEADER_TEXT" 50    # second arg (width) is optional; if not given, header fills console width
+        # menu_draw_fancy_header "$HEADER_TEXT" 50    # second arg (width) is optional; if not given, header fills console width
+        printHeader "$HEADER_TEXT" "$HEADER_COLOR"
         menu_draw_temp_message
         menu_draw_items
 
@@ -86,6 +97,7 @@ menu_loop() {
                 ((SELECTED >= ${#MENU_ITEMS[@]})) && SELECTED=0
                 ;;
             "") # Enter
+                tput cnorm # show cursor
                 return $SELECTED
                 ;;
         esac
@@ -97,10 +109,11 @@ menu_loop() {
 # Main wrapper to run the menu
 draw_menu() {
     HEADER_TEXT="$1"
+    HEADER_COLOR="$2"
     # SHOW_HEADER="$2"
     # SHOW_TEMP_MESSAGE="$2"
     # TEMP_MESSAGE="$2"
-    shift 1    # shift remaining args to $1, $2, ...
+    shift 2    # shift remaining args to $1, $2, ...
     MENU_ITEMS=("$@")
 
     SELECTED=0

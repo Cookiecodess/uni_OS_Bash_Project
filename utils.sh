@@ -1,6 +1,66 @@
 #!/bin/bash
 
-INTRP_SIG=-999 #interrupt signal, output by input-validating functions
+# Include guard
+if [[ -n "$__UTILS_SH_INCLUDED__" ]]; then
+    # If sourced in another script: return, else (probably ran directly in cli): exit
+    [[ "${BASH_SOURCE[0]}" != "${0}" ]] && return || exit 0
+fi
+export __UTILS_SH_INCLUDED__=true
+
+# color constants
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033[34m'
+CYAN='\033[36m'
+RESET='\033[0m'
+
+
+# general functions
+function printHeader() {
+    local header="$1"
+    local color="${2:-}"       # optional: if not passed in, just print plain
+    local width="${3:-50}"     # default width is 28 unless caller says otherwise
+
+    # if header is longer than the box, make the box bigger
+    if (( width < ${#header} )); then
+        width=$(( ${#header} + 4 ))  # add some breathing room
+    fi
+
+    # make the top/bottom border: just a row of '=' chars
+    local border=$(printf '=%.0s' $(seq 1 "$width"))
+
+    # figure out how many spaces to put before the header to center it
+    local padding=$(( (width - ${#header}) / 2 ))
+    local spaces=$(printf '%*s' "$padding" '')
+
+    # if color is passed, use it for borders and header
+    if [[ -n "$color" ]]; then
+        echo -e "${color}${border}\033[0m"
+        echo -e "${spaces}${color}${header}\033[0m"
+        echo -e "${color}${border}\033[0m"
+    else
+        echo "$border"
+        echo "${spaces}${header}"
+        echo "$border"
+    fi
+
+    echo # extra newline after header
+}
+
+
+function waitMessage() {
+    echo -e "\nPress any key to continue..."
+    read -r -n1 -s
+}
+
+# sound
+beep() {
+    echo -e "\a"
+    sleep "$1"
+}
+
+# INPUT VALIDATION AND INPUT HANDLING FUNCTIONS
 
 # ===== Notes on returning strings from functions: =====
 # if you do this:
@@ -9,6 +69,8 @@ INTRP_SIG=-999 #interrupt signal, output by input-validating functions
 # To actually print stuff inside func, you must append ">&2" to the echo command.
 # It tells echo to redirect the data to stderr instead of stdout, which means, 
 # "yo, show up on the terminal screen, but you will NOT be the output of the function".
+
+INTRP_SIG=-999 #interrupt signal, output by input-validating functions
 
 # Usage:
 # get_confirm_input "Do you want to continue? (y/n): " "y Y" "n N" "Please enter y or n."
@@ -47,7 +109,7 @@ get_valid_input_by_set() {
     done
 }
 
-
+# currently not interruptable
 get_valid_input_by_func() {
     local prompt="$1"
     local validation_fn="$2"  # The validation function's name passed as a string
@@ -90,12 +152,16 @@ validate_date() {
 }
 
 # Calling the function and capturing the output (the valid string)
-date=$(get_valid_input_by_func "Enter your date: " validate_date "Invalid date. Please enter a valid date.")
+# date=$(get_valid_input_by_func "Enter your date: " validate_date "Invalid date. Please enter a valid date.")
 
 # Using get_valid_input_by_set, interruptable by entering "q" or "Q"
-membershipType=$(get_valid_input_by_set "Enter membership: " "Student Public" "q Q" "Must be Student or Public.")
-if [[ "$membershipType" -eq $INTRP_SIG ]]; then
-    echo "End!"
-    exit 0
-fi
-echo "Membership type: $membershipType"
+# membershipType=$(get_valid_input_by_set "Enter membership: " "Student Public" "q Q" "Must be Student or Public.")
+# if [[ "$membershipType" -eq $INTRP_SIG ]]; then
+#     echo "End!"
+#     exit 0
+# fi
+# echo "Membership type: $membershipType"
+
+
+
+
