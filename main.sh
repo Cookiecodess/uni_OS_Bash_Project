@@ -30,8 +30,8 @@ beep() {
 
 function printHeader(){
     clear
-    echo -e "\t ${choices[$key]}!"
-    echo -e "===================================================="
+echo -e "\t ${choices[$key]}!"
+echo -e "===================================================="
 
 }
 function waitMessage() {
@@ -212,6 +212,7 @@ function updatePatron(){
 
 
 
+
 function menu(){
     clear
     echo -e "${GREEN}==========================================================="
@@ -254,10 +255,12 @@ key=${key^^}
      elif [ "$key" == "S" ]; then
         
     searchPatron
+        printHeader
+    
      elif [ "$key" == "U" ]; then
         
     updatePatron
-elif [ "$key" == "D" ]; then
+     elif [ "$key" == "D" ]; then
         printHeader
 
 
