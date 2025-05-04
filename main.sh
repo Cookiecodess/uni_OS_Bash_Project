@@ -357,9 +357,9 @@ function menu() {
 function login() {
     clear
     # echo -e "${CYAN}======================================="
-    # echo -e "      Welcome to Linux Secure Login     "
+    # echo -e "           Welcome to Our System     "
     # echo -e "=======================================${RESET}"
-    printHeader "Welcome to Linux Secure Login" "${CYAN}"
+    printHeader "Welcome to Our System" "${CYAN}"
     # echo
 
     while [ $attempts -lt $MAX_ATTEMPTS ]; do
@@ -411,7 +411,6 @@ function login() {
     echo
     echo -e "${RED}======================================="
     echo -e "Account locked due to too many failed attempts."
-    echo -e "Please contact the system administrator."
     echo -e "=======================================${RESET}"
     exit 1
 
