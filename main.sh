@@ -30,54 +30,54 @@ beep() {
 
 function printHeader(){
     clear
-echo -e "\t ${choices[$key]}!"
-echo -e "===================================================="
+    echo -e "\t ${choices[$key]}!"
+    echo -e "===================================================="
 
 }
 function waitMessage() {
     echo -e "\nPress any key to continue..."
-    read -n1 -s
+    read -r -n1 -s
 }
 function addNew() {
      printHeader
     continue="y"
-    while [[ "$continue" == "y" ]] do
-        read -p "Patron ID:" pID
-            while [[ -z "$pID" ]]; do
-                echo -e "Sorry the Patron ID cannot left blank."
-                read -p "Patron ID:" pID
-            done
-        read -p "First Name:" fname
-            while [[ -z "$fname" ]]; do
-                echo -e "Sorry the First Name cannot left blank."
-                read -p "First Name:" fname
-            done
-        read -p "Last Name:" lname
-            while [[ -z "$lname" ]]; do
-                echo -e "Sorry the Last Name cannot left blank."
-                read -p "Last Name:" lname
-            done
-        read -p "Mobile Number(01#-########):" phnum
-            while ! [[ "$phnum" =~ ^01[0-9]{1}-[0-9]{7,8}$ ]]; do
-                echo -e "Sorry the Phone Number Format is wrong."
-                read -p "Mobile Number:" phnum
-            done
-        read -p "Birth Date (MM-DD-YYYY):" bdate
-            while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
-                echo -e "Sorry the Birth Date Format is wrong."
-                read -p "Birth Date (MM-DD-YYYY):" bdate
-            done     
-        read -p "Membership type (Student / Public):" memberType
-            while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
+    while [[ "$continue" == "y" ]]; do
+        read -r -p "Patron ID:" pID
+        while [[ -z "$pID" ]]; do
+            echo -e "Sorry the Patron ID cannot left blank."
+            read -r -p "Patron ID:" pID
+        done
+        read -r -p "First Name:" fname
+        while [[ -z "$fname" ]]; do
+            echo -e "Sorry the First Name cannot left blank."
+            read -r -p "First Name:" fname
+        done
+        read -r -p "Last Name:" lname
+        while [[ -z "$lname" ]]; do
+            echo -e "Sorry the Last Name cannot left blank."
+            read -r -p "Last Name:" lname
+        done
+        read -r -p "Mobile Number(01#-########):" phnum
+        while ! [[ "$phnum" =~ ^01[0-9]{1}-[0-9]{7,8}$ ]]; do
+            echo -e "Sorry the Phone Number Format is wrong."
+            read -r -p "Mobile Number:" phnum
+        done
+        read -r -p "Birth Date (MM-DD-YYYY):" bdate
+        while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
+            echo -e "Sorry the Birth Date Format is wrong."
+            read -r -p "Birth Date (MM-DD-YYYY):" bdate
+        done     
+        read -r -p "Membership type (Student / Public):" memberType
+        while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
 
-                echo -e "Sorry Please Select (Student/Public)."
-                read -p "Membership type (Student / Public):" memberType
-            done
-        read -p "Joined Date (MM-DD-YYYY):" joinedDate
-            while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
-                echo -e "Sorry the Joined Date Format is wrong."
-                read -p "Joined Date (MM-DD-YYYY):" joinedDate
-            done 
+            echo -e "Sorry Please Select (Student/Public)."
+            read -r -p "Membership type (Student / Public):" memberType
+        done
+        read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
+        while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
+            echo -e "Sorry the Joined Date Format is wrong."
+            read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
+        done 
 
         echo "Press (q) to return to Patron Maintenance Menu."
         read -p "Add another new patron details? (y)es or (q)uit :" continue
@@ -92,7 +92,7 @@ function addNew() {
             # fi
         #echo -e "PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate">>patron.txt
         echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate">>patron.txt
-    menu
+        menu
     done
 
 }
@@ -232,13 +232,13 @@ choices["Q"]="Exit from Program"
 
 for key in "${keys[@]}"; do
      if [ "$key" == "Q" ];
-         then echo -e ""
+     then echo -e ""
      fi
     echo "$key - ${choices[$key]}"
-    
+
 done
 
-read -p "Please select a choice:" key
+read -r -p "Please select a choice:" key
 
 key=${key^^}
 
@@ -250,25 +250,25 @@ key=${key^^}
          then   
          addNew
 
-    
+
      elif [ "$key" == "S" ]; then
         
     searchPatron
      elif [ "$key" == "U" ]; then
         
     updatePatron
-     elif [ "$key" == "D" ]; then
+elif [ "$key" == "D" ]; then
         printHeader
-    
-    
-         elif [ "$key" == "L" ]; then
+
+
+    elif [ "$key" == "L" ]; then
         printHeader
-     elif [ "$key" == "P" ]; then
+    elif [ "$key" == "P" ]; then
         printHeader
-         elif [ "$key" == "J" ]; then
+    elif [ "$key" == "J" ]; then
         printHeader
-        
-   elif [ "$key" == "Q" ]; then
+
+    elif [ "$key" == "Q" ]; then
         echo -e "\nGoodbye!"
         exit 0
 
@@ -276,11 +276,11 @@ key=${key^^}
         echo "Invalid choice: $key"
         waitMessage
     menu
-     
-     
-     
+
+
+
      fi
-}
+ }
 
 
 function login(){

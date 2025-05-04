@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # read -p "Whats your name? " var
 # echo $var
 number=$((1 + 5))
@@ -46,3 +48,10 @@ echo $result2
 
 # if []
 # comment
+
+str="hello world"
+if [ "$str" == "hello world" ]; then
+    echo "yes"
+else
+    echo "no"
+fi 
