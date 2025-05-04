@@ -1,0 +1,101 @@
+#!/bin/bash
+
+INTRP_SIG=-999 #interrupt signal, output by input-validating functions
+
+# ===== Notes on returning strings from functions: =====
+# if you do this:
+#       return=$(func)
+# then all echo commands in func go to stdout, which in this case is NOT the console screen, but to $return.
+# To actually print stuff inside func, you must append ">&2" to the echo command.
+# It tells echo to redirect the data to stderr instead of stdout, which means, 
+# "yo, show up on the terminal screen, but you will NOT be the output of the function".
+
+# Usage:
+# get_confirm_input "Do you want to continue? (y/n): " "y Y" "n N" "Please enter y or n."
+# [ $? -eq 0 ] means accepted, [ $? -eq 1 ] means interrupted
+get_valid_input_by_set() {
+    local prompt="$1"
+    local accept_str="$2"
+    local interrupt_str="$3"
+    local error_msg="$4"
+    local input
+
+    while true; do
+        read -rp "$prompt" input
+
+        # If input is in the accepted list
+        for word in $accept_str; do
+            if [[ "$input" == "$word" ]]; then
+                echo -en "\033[2K" >&2 # Clear error line in case it was printed
+                echo "$input" #return valid input
+                return 0  # accepted
+            fi
+        done
+
+        # If input is in the interrupt list
+        for word in $interrupt_str; do
+            if [[ "$input" == "$word" ]]; then
+                echo -en "\033[2K" >&2 # Clear error line in case it was printed
+                echo $INTRP_SIG # return interrupt signal
+                return 1  # interrupted
+            fi
+        done
+
+        # Not accepted or interrupted, so show error
+        echo -n "$error_msg" >&2
+        echo -en "\033[1A\033[2K\033[1G" >&2 # Move up 1 line, clear it completely, and move to column 1
+    done
+}
+
+
+get_valid_input_by_func() {
+    local prompt="$1"
+    local validation_fn="$2"  # The validation function's name passed as a string
+    local error_msg="$3"
+    local input
+
+    while true; do
+        read -rp "$prompt" input
+
+        # Call the validation function (it should return 0 for valid input)
+        if "$validation_fn" "$input"; then
+            echo -en "\033[2K" >&2 # Clear error line in case it was printed (>&2 redirects this ANSI string to stderr instead of stdout so it doesn't get "returned" but still printed on screen)
+            echo "$input" # our "return value" ($(get_valid_input) will evaluate to this)
+            return 0
+        else
+            echo -n "$error_msg" >&2 # ()>&2 to print on screen but do not return)
+            echo -en "\033[1A\033[2K\033[1G" >&2 # Move up 1 line, clear it completely, and move to column 1
+        fi
+    done
+}
+
+# Phone validation function
+validate_phone_number() {
+    local phone="$1"
+    if [[ "$phone" =~ ^01[0-9]-[0-9]{8}$ ]]; then
+        return 0 # true (yes, 0 is true. weird, i know)
+    else
+        return 1 # false
+    fi
+}
+
+# Date validation function
+validate_date() {
+    local date="$1"
+    if [[ "$date" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; then
+        return 0 # true (yes, 0 is true. weird, i know)
+    else
+        return 1 # false
+    fi
+}
+
+# Calling the function and capturing the output (the valid string)
+date=$(get_valid_input_by_func "Enter your date: " validate_date "Invalid date. Please enter a valid date.")
+
+# Using get_valid_input_by_set, interruptable by entering "q" or "Q"
+membershipType=$(get_valid_input_by_set "Enter membership: " "Student Public" "q Q" "Must be Student or Public.")
+if [[ "$membershipType" -eq $INTRP_SIG ]]; then
+    echo "End!"
+    exit 0
+fi
+echo "Membership type: $membershipType"
