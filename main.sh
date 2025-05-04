@@ -1,9 +1,37 @@
-#!/bin/bash
+
+# color
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033[34m'
+CYAN='\033[36m'
+RESET='\033[0m'
+
+# password and name
+CORRECT_USER="admin"
+CORRECT_PASS="123"
+
+#only can this few time to login fail
+MAX_ATTEMPTS=3
+attempts=0
+
+# sound
+beep() {
+    echo -e "\a"
+    sleep $1
+}
+
+# login page
+
+
+
+
+
 
 function printHeader() {
     clear
-    echo -e "\t\t ${choices[$key]}!"
-    echo -e "==================================="
+echo -e "\t ${choices[$key]}!"
+echo -e "===================================================="
 
 }
 function waitMessage() {
@@ -11,8 +39,10 @@ function waitMessage() {
     read -r -n1 -s
 }
 function addNew() {
+     
     continue="y"
     while [[ "$continue" == "y" ]]; do
+printHeader
         read -r -p "Patron ID:" pID
         while [[ -z "$pID" ]]; do
             echo -e "Sorry the Patron ID cannot left blank."
@@ -51,158 +81,154 @@ function addNew() {
         done
 
         echo "Press (q) to return to Patron Maintenance Menu."
-        read -r -p "Add another new patron details? (y)es or (q)uit :" continue
-        #  if [ "$continue" == "q" ];
-        #     then echo "yes"
-        # fi
+        read -p "Add another new patron details? (y)es or (q)uit :" continue
+           while ! [[ "$continue" == "y" || "$continue" == "q" ]]; do
+                echo -e "Sorry you selection is invalid.Please try again."
+                read -p "Press (q) to return to Patron Maintenance Menu." continue
+            done  
+           
+           
+            #  if [ "$continue" == "q" ];
+            #     then echo "yes"
+            # fi
         #echo -e "PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate">>patron.txt
-        echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate" >>patron.txt
-        menu
+        echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate">>patron.txt
+        
     done
-
+menu
 }
 
-function searchPatron() {
-    # clear
-    # echo "Search Patron Details"
-    read -r -p "Enter Patron ID: " id
-    id=${id^^}
-    line=$(grep "^$id:" patron.txt)
 
-    #if line found
-    if [[ -n "$line" ]]; then
-        IFS=: read -r -r id fname lname phone bdate member jdate <<<"$line"
 
-        clear
 
-        echo "Patron Found!"
-        echo "==========================="
-        echo "Patron ID: $id"
-        echo "First Name: $fname"
-        echo "Last Name: $lname"
-        echo "Mobile Number: $phone"
-        echo "Birth Date (DD-MM-YYYY): $bdate"
-        echo "Membership Type (Student/Public): $member"
-        echo "Joined Date (DD-MM-YYYY): $jdate"
-    else
-        clear
-        echo "No Patron with ID $id Found!"
-    fi
-
-    printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
-
-    read -r -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
-    if [[ "${choice,,}" == "y" ]]; then
-        searchPatron
-    elif [[ "${choice,,}" == "q" ]]; then
-        menu
-    fi
-
-    # echo ""
-    # done
+function searchPatron(){
+	# clear
+	# echo "Search Patron Details"
+    printHeader
+	 continue="y"
+    while [[ "$continue" == "y" ]] do
+	read -p "Enter Patron ID: " id
+	id=${id^^}
+	line=$(grep "^$id:" patron.txt)
+	
+	#if line found
+	if [[ -n "$line" ]]; then
+		IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+		
+		# clear
+		
+		# echo "Patron Found!"
+		# echo "==========================="
+		echo "Patron ID: $id"
+		echo "First Name: $fname"
+		echo "Last Name: $lname"
+		echo "Mobile Number: $phone"
+		echo "Birth Date (DD-MM-YYYY): $bdate"
+		echo "Membership Type (Student/Public): $member"
+		echo "Joined Date (DD-MM-YYYY): $jdate"
+	else	
+		clear
+		echo "No Patron with ID $id Found!"
+	fi
+	
+	printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+	read -n 1 -s -p "Search another patron? (y)es or (q)uit: " choice
+	if [[ "${choice,,}" == "y" ]]; then
+		searchPatron
+	fi
+	menu
+    done
 }
 
-function updatePatron() {
-    # clear
-    # echo "Update a Patron Details"
-    read -r -p "Enter Patron ID: " id
-    id=${id^^}
 
-    line=$(grep "^$id:" patron.txt)
-
-    #if line found
-    if [[ -n "$line" ]]; then
-        IFS=: read -r -r id fname lname phone bdate member jdate <<<"$line"
-
-        clear
-
-        echo "Patron Found!"
-        echo "==========================="
-        echo "Patron ID: $id"
-        echo "First Name: $fname"
-        echo "Last Name: $lname"
-
-        while true; do
-            read -r -e -i $phone -p "Mobile Number: " newphone
-            if [[ $newphone =~ (^01[2-9]-[0-9]{7}$)|(^011-[0-9]{8}$) ]]; then
-                clear
-                echo "Patron Found!"
-                echo "==========================="
-                echo "Patron ID: $id"
-                echo "First Name: $fname"
-                echo "Last Name: $lname"
-                echo "Mobile Number: $newphone"
-                break
-            else
-                clear
-                echo "Patron Found!"
-                echo "==========================="
-                echo "Patron ID: $id"
-                echo "First Name: $fname"
-                echo "Last Name: $lname"
-                echo "Invalid Phone Format!"
-            fi
-        done
-
-        while true; do
-            read -r -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
-            if [[ $newdate =~ ^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$ ]]; then
-                clear
-                echo "Patron Found!"
-                echo "==========================="
-                echo "Patron ID: $id"
-                echo "First Name: $fname"
-                echo "Last Name: $lname"
-                echo "Mobile Number: $newphone"
-                echo "Birth Date (DD-MM-YYYY): $newdate"
-                break
-            else
-                clear
-                echo "Patron Found!"
-                echo "==========================="
-                echo "Patron ID: $id"
-                echo "First Name: $fname"
-                echo "Last Name: $lname"
-                echo "Mobile Number: $newphone"
-                echo "Invalid Date Format!"
-            fi
-        done
-
-        echo "Membership Type (Student/Public): $member"
-        echo "Joined Date (DD-MM-YYYY): $jdate"
-
-        printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
-
-        read -r -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
-        if [[ "${choice,,}" == "y" ]]; then
-            sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
-        elif [[ "${choice,,}" == "q" ]]; then
-            menu
-        fi
-
-    else
-        clear
-        echo "No Patron with ID $id Found!"
-        printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
-
-        read -r -n 1 -s
-    fi
-
+function updatePatron(){
+	# clear
+	# echo "Update a Patron Details"
+     printHeader
+	read -p "Enter Patron ID: " id
+	id=${id^^}
+	
+	line=$(grep "^$id:" patron.txt)
+	
+	#if line found
+	if [[ -n "$line" ]]; then
+		IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
+		
+		clear
+		
+		# echo "Patron Found!"
+		# echo "==========================="
+		echo "Patron ID: $id"
+		echo "First Name: $fname"
+		echo "Last Name: $lname"
+		read -e -i $phone -p "Mobile Number: " newphone
+		
+		while true; do
+			read -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
+			if [[ $newdate =~ ^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$ ]]; then
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Mobile Number: $newphone"
+				echo "Birth Date (DD-MM-YYYY): $newdate"
+				break
+			else
+				clear
+				echo "Patron Found!"
+				echo "==========================="
+				echo "Patron ID: $id"
+				echo "First Name: $fname"
+				echo "Last Name: $lname"
+				echo "Mobile Number: $newphone"
+				echo "Invalid Date Format!"
+			fi
+		done
+		
+		echo "Membership Type (Student/Public): $member"
+		echo "Joined Date (DD-MM-YYYY): $jdate"
+		
+		printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+		read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
+		if [[ "${choice,,}" == "y" ]]; then
+			sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
+		fi
+		
+	else	
+		clear
+		echo "No Patron with ID $id Found!"
+		printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
+	
+		read -n 1 -s
+	fi
+	menu
+    
+	
 }
+
+
 
 function menu() {
     clear
-    echo "Patron Maintenance Menu"
-    declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
-    declare -A choices
-    choices["A"]="Add New Patron Details"
-    choices["S"]="Search a Patron (by Patron ID)"
-    choices["U"]="Update a Patron Details"
-    choices["D"]="Delete a Patron Details"
-    choices["L"]="Sort Patrons by Last Name"
-    choices["P"]="Sort Patrons by Patron ID"
-    choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
-    choices["Q"]="Exit from Program"
+    echo -e "${GREEN}==========================================================="
+echo -e "\t Patron Maintenance Menu"
+echo -e "===========================================================${RESET}"
+declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
+declare -A choices
+choices["A"]="Add New Patron Details"
+choices["S"]="Search a Patron (by Patron ID)"
+choices["U"]="Update a Patron Details"
+choices["D"]="Delete a Patron Details"
+choices["L"]="Sort Patrons by Last Name"
+choices["P"]="Sort Patrons by Patron ID"
+choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
+choices["Q"]="Exit from Program"
+
+
 
     for key in "${keys[@]}"; do
         if [ "$key" == "Q" ]; then
@@ -216,17 +242,22 @@ function menu() {
 
     key=${key^^}
 
-    if [ "$key" == "A" ]; then #     if [ "$key" == "A" ] || [ "$key" == "a" ];
-        printHeader
-        addNew
 
-    elif [ "$key" == "S" ]; then
+
+     if [ "$key" == "A" ];
+     #     if [ "$key" == "A" ] || [ "$key" == "a" ];
+   
+         then   
+         addNew
+
+
+     elif [ "$key" == "S" ]; then
         printHeader
-        searchPatron
-    elif [ "$key" == "U" ]; then
+    searchPatron
+elif [ "$key" == "U" ]; then
         printHeader
-        updatePatron
-    elif [ "$key" == "D" ]; then
+    updatePatron
+elif [ "$key" == "D" ]; then
         printHeader
 
     elif [ "$key" == "L" ]; then
@@ -248,8 +279,74 @@ function menu() {
     fi
 }
 
-# Display splash screen once on program load
-# source splash.sh
 
-# Start program main loop
-menu
+function login(){
+clear
+echo -e "${CYAN}======================================="
+echo -e "      Welcome to Linux Secure Login     "
+echo -e "=======================================${RESET}"
+echo
+
+while [ $attempts -lt $MAX_ATTEMPTS ]; do
+    echo -ne "${BLUE}Username: ${RESET}"    #n = no next line
+    read username
+
+    echo -ne "${BLUE}Password: ${RESET}"
+    read -s password    #hiden the password
+    echo
+
+    echo -e "${YELLOW}Verifying credentials...${RESET}"
+    sleep 2
+
+    if [[ "$username" == "$CORRECT_USER" && "$password" == "$CORRECT_PASS" ]]; then
+        echo
+        echo -e "${GREEN}======================================="
+        echo -e "Login successful. Welcome, $username!"
+        echo -e "=======================================${RESET}"
+
+        # a long sound
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.4
+        sleep 0.3
+        beep 0.2
+        beep 0.2
+        sleep 0.1
+        beep 0.4
+
+        echo
+        echo -e "${CYAN}Enjoy your session!${RESET}"
+        menu
+    else
+        echo
+        echo -e "${RED}Login failed: Incorrect username or password.${RESET}"
+        attempts=$((attempts+1))
+        if [ $attempts -lt $MAX_ATTEMPTS ]; then
+            echo -e "${YELLOW}Please try again. Attempts left: $((MAX_ATTEMPTS - attempts))${RESET}"
+            echo
+            sleep 1
+        fi
+    fi
+done
+
+echo
+echo -e "${RED}======================================="
+echo -e "Account locked due to too many failed attempts."
+echo -e "Please contact the system administrator."
+echo -e "=======================================${RESET}"
+exit 1
+
+
+
+
+}
+
+
+
+#menu
+
+login
