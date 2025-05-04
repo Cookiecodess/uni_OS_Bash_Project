@@ -222,9 +222,8 @@ function updatePatron() {
             read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or press any key to quit: " choice
             if [[ "${choice,,}" == "y" ]]; then
                 sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
-            # elif [[ "${choice,,}" == "q" ]]; then
-            #     menu
             fi
+	    choice="q"
 
         else
             clear
