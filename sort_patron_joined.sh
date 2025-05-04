@@ -72,8 +72,9 @@ export_as_colon() {
     local outfile="patrons_sorted_joined_${today}.csv"
     outfile=$(generate_unique_filename "$outfile")
 
+    head -n 1 "$patron_file" > "$outfile" # write first row (header line) to output file
     tail -n +2 "$patron_file" \
-         | sort -t ':' -k7.7,7.10nr -k7.1,7.2nr -k7.4,7.5nr > "$outfile"
+         | sort -t ':' -k7.7,7.10nr -k7.1,7.2nr -k7.4,7.5nr >> "$outfile"
 
     print_msg_below_menu "${GREEN}Exported colon-separated data to $outfile! :)${RESET}"
 }

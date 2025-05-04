@@ -77,7 +77,8 @@ export_as_colon() {
     # Generate unique filename if the file already exists
     outfile=$(generate_unique_filename "$outfile")
 
-    tail -n +2 "$patron_file" | sort -t ':' -k3,3 > "$outfile"
+    head -n 1 "$patron_file" > "$outfile" # write first row (header line) to output file
+    tail -n +2 "$patron_file" | sort -t ':' -k3,3 >> "$outfile"
 
     print_msg_below_menu "${GREEN}Exported colon-separated data to $outfile! :)${RESET}"
 }
