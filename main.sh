@@ -95,10 +95,11 @@ function addNew() {
 function searchPatron() {
     # clear
     # echo "Search Patron Details"
-    clear
-    printHeader "Search Patron Details"
+    
     continue="y"
     while [[ "$continue" == "y" ]]; do
+	    clear
+	    printHeader "Search Patron Details"
         read -r -p "Enter Patron ID: " id
         id=${id^^}
         line=$(grep "^$id:" patron.txt)
@@ -107,7 +108,8 @@ function searchPatron() {
         if [[ -n "$line" ]]; then
             IFS=: read -r id fname lname phone bdate member jdate <<< "$line"
 
-            # clear
+            clear
+    	    printHeader "Patron Found!"
 
             # echo "Patron Found!"
             # echo "==========================="
@@ -120,7 +122,7 @@ function searchPatron() {
             echo "Joined Date (DD-MM-YYYY): $jdate"
         else
             clear
-            echo "No Patron with ID $id Found!"
+    	    printHeader "No Patron with ID $id Found!"
         fi
 
         printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
@@ -155,9 +157,7 @@ function updatePatron() {
             IFS=: read -r id fname lname phone bdate member jdate <<<"$line"
 
             clear
-
-            echo "Patron Found!"
-            echo "==========================="
+	    printHeader "Patron Found!"
             echo "Patron ID: $id"
             echo "First Name: $fname"
             echo "Last Name: $lname"
@@ -166,8 +166,7 @@ function updatePatron() {
                 read -e -i $phone -p "Mobile Number: " newphone
                 if [[ $newphone =~ (^01[2-9]-[0-9]{7}$)|(^011-[0-9]{8}$) ]]; then
                     clear
-                    echo "Patron Found!"
-                    echo "==========================="
+	    	    printHeader "Patron Found!"
                     echo "Patron ID: $id"
                     echo "First Name: $fname"
                     echo "Last Name: $lname"
@@ -175,8 +174,7 @@ function updatePatron() {
                     break
                 else
                     clear
-                    echo "Patron Found!"
-                    echo "==========================="
+	            printHeader "Patron Found!"
                     echo "Patron ID: $id"
                     echo "First Name: $fname"
                     echo "Last Name: $lname"
@@ -188,8 +186,7 @@ function updatePatron() {
                 read -e -i $bdate -p "Birth Date (DD-MM-YYYY): " newdate
                 if [[ $newdate =~ ^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$ ]]; then
                     clear
-                    echo "Patron Found!"
-                    echo "==========================="
+	            printHeader "Patron Found!"
                     echo "Patron ID: $id"
                     echo "First Name: $fname"
                     echo "Last Name: $lname"
@@ -198,8 +195,7 @@ function updatePatron() {
                     break
                 else
                     clear
-                    echo "Patron Found!"
-                    echo "==========================="
+	            printHeader "Patron Found!"
                     echo "Patron ID: $id"
                     echo "First Name: $fname"
                     echo "Last Name: $lname"
@@ -222,7 +218,7 @@ function updatePatron() {
 
         else
             clear
-            echo "No Patron with ID $id Found!"
+	    printHeader "No Patron with ID $id Found!"
 
             read -n 1 -s -p "Press (y) to continue or press any key to return to Patron Maintenance Menu." choice
             # if [[ "${choice,,}" == "q" ]]; then
@@ -329,10 +325,10 @@ function menu() {
                 bash delete_patron.sh 
                 ;;
             4)
-                bash sort_patron_lname.sh
+                ./sort_by_lastname.sh
                 ;;
             5)
-                bash sort_patron_id.sh
+                ./sort_by_id.sh
                 ;;
             6)
                 bash sort_patron_joined.sh
