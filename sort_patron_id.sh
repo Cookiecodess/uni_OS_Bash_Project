@@ -6,29 +6,27 @@ source sort_utils.sh
 patron_file="patron.txt"
 TEMP_MSG=""
 
-# For reference, here's the data structure of patron.txt:
-# PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate
+# Skip header and sort by Patron ID (1st field)
+sorted=$(tail -n +2 "$patron_file" | sort -t ':' -k1,1)
 
-# Skip first line (header row) in patron.txt,
-# then sort by Last Name (2nd field)
-sorted=$(tail -n +2 "$patron_file" | sort -t ':' -k3,3)
-
-# Extract fields into arrays for length calculation
+# Extract relevant fields into arrays
+ids=()
 last_names=()
 first_names=()
 mobiles=()
 dates=()
-types=()
+# types=()
 
 while IFS=':' read -r id first last mobile birth type joined; do
+    ids+=("$id")
     last_names+=("$last")
     first_names+=("$first")
     mobiles+=("$mobile")
-    dates+=("$joined")
-    types+=("$type")
+    dates+=("$birth")
+    # types+=("$type")
 done <<< "$sorted"
 
-# Determine max width for each column
+# Calculate max widths
 maxlen() {
     local max=0
     for str in "${@:2}"; do
@@ -37,33 +35,34 @@ maxlen() {
     echo $(( max > ${#1} ? max : ${#1} ))
 }
 
+w_id=$(maxlen "Patron ID" "${ids[@]}")
 w_last=$(maxlen "Last Name" "${last_names[@]}")
 w_first=$(maxlen "First Name" "${first_names[@]}")
 w_mobile=$(maxlen "Mobile Number" "${mobiles[@]}")
-w_date=$(maxlen "Joined Date" "${dates[@]}")
-w_type=$(maxlen "Membership Type" "${types[@]}")
+w_date=$(maxlen "Birth Date" "${dates[@]}")
+# w_type=$(maxlen "Membership Type" "${types[@]}")
 
 export_as_table() {
     local today=$(date +%d-%m-%Y)
-    local outfile="patrons_sorted_lname_${today}.txt"
-
-    # Generate unique filename if the file already exists
+    local outfile="patrons_sorted_id_${today}.txt"
     outfile=$(generate_unique_filename "$outfile")
 
     {
         printf "%-*s  %-*s  %-*s  %-*s  %-*s\n" \
+            "$w_id" "Patron ID" \
             "$w_last" "Last Name" \
             "$w_first" "First Name" \
             "$w_mobile" "Mobile Number" \
-            "$w_date" "Joined Date" \
-            "$w_type" "Membership Type"
-        for i in "${!last_names[@]}"; do
+            "$w_date" "Birth Date" \
+            # "$w_type" "Membership Type"
+        for i in "${!ids[@]}"; do
             printf "%-*s  %-*s  %-*s  %-*s  %-*s\n" \
+                "$w_id" "${ids[i]}" \
                 "$w_last" "${last_names[i]}" \
                 "$w_first" "${first_names[i]}" \
                 "$w_mobile" "${mobiles[i]}" \
                 "$w_date" "${dates[i]}" \
-                "$w_type" "${types[i]}"
+                # "$w_type" "${types[i]}"
         done
     } > "$outfile"
 
@@ -72,16 +71,13 @@ export_as_table() {
 
 export_as_colon() {
     local today=$(date +%d-%m-%Y)
-    local outfile="patrons_sorted_lname_${today}.csv"
-
-    # Generate unique filename if the file already exists
+    local outfile="patrons_sorted_id_${today}.csv"
     outfile=$(generate_unique_filename "$outfile")
 
-    tail -n +2 "$patron_file" | sort -t ':' -k3,3 > "$outfile"
+    tail -n +2 "$patron_file" | sort -t ':' -k1,1 > "$outfile"
 
     print_msg_below_menu "${GREEN}Exported colon-separated data to $outfile! :)${RESET}"
 }
-
 
 
 # clear screen and hide cursor
@@ -89,24 +85,24 @@ clear
 tput civis
 
 # Print header
-printHeader "Patron Details Sorted by Last Name" "\033[1;34m" $((w_last + w_first + w_mobile + w_date + w_type + 16))
+printHeader "Patron Details Sorted by ID" "\033[1;34m" $((w_id + w_last + w_first + w_mobile + w_date + 20))
 
 # Print column headers in bold
 printf "\033[1m%-*s  %-*s  %-*s  %-*s  %-*s\033[0m\n" \
+  "$w_id" "Patron ID" \
   "$w_last" "Last Name" \
   "$w_first" "First Name" \
   "$w_mobile" "Mobile Number" \
-  "$w_date" "Joined Date" \
-  "$w_type" "Membership Type"
+  "$w_date" "Birth Date"
 
 # Print patron data
-for i in "${!last_names[@]}"; do
+for i in "${!ids[@]}"; do
     printf "%-*s  %-*s  %-*s  %-*s  %-*s\n" \
+      "$w_id" "${ids[i]}" \
       "$w_last" "${last_names[i]}" \
       "$w_first" "${first_names[i]}" \
       "$w_mobile" "${mobiles[i]}" \
-      "$w_date" "${dates[i]}" \
-      "$w_type" "${types[i]}"
+      "$w_date" "${dates[i]}"
 done
 
 # Print selection menu

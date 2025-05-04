@@ -335,7 +335,7 @@ function menu() {
                 bash sort_patron_id.sh
                 ;;
             6)
-                ./sort_by_joined_date.sh
+                bash sort_patron_joined.sh
                 ;;
             7)
                 echo "Goodbye!"
