@@ -39,9 +39,10 @@ function waitMessage() {
     read -r -n1 -s
 }
 function addNew() {
-     printHeader
+     
     continue="y"
     while [[ "$continue" == "y" ]]; do
+printHeader
         read -r -p "Patron ID:" pID
         while [[ -z "$pID" ]]; do
             echo -e "Sorry the Patron ID cannot left blank."
@@ -92,9 +93,9 @@ function addNew() {
             # fi
         #echo -e "PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate">>patron.txt
         echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate">>patron.txt
-        menu
+        
     done
-
+menu
 }
 
 
