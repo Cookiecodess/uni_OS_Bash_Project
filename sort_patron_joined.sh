@@ -6,8 +6,9 @@ source sort_utils.sh
 patron_file="patron.txt"
 TEMP_MSG=""
 
-# Skip header and sort by Joined Date (6th field)
-sorted=$(tail -n +2 "$patron_file" | sort -t ':' -k6,6)
+# Skip header and sort by Joined Date (7th field)
+sorted=$(tail -n +2 "$patron_file" \
+         | sort -t ':' -k7.7,7.10nr -k7.1,7.2nr -k7.4,7.5nr) # sort by year, then by month, then by day
 
 # Extract relevant fields into arrays
 ids=()
@@ -71,7 +72,8 @@ export_as_colon() {
     local outfile="patrons_sorted_joined_${today}.csv"
     outfile=$(generate_unique_filename "$outfile")
 
-    tail -n +2 "$patron_file" | sort -t ':' -k6,6 > "$outfile"
+    tail -n +2 "$patron_file" \
+         | sort -t ':' -k7.7,7.10nr -k7.1,7.2nr -k7.4,7.5nr > "$outfile"
 
     print_msg_below_menu "${GREEN}Exported colon-separated data to $outfile! :)${RESET}"
 }

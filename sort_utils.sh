@@ -22,7 +22,7 @@ print_msg_below_menu() {
     tput rc # move cursor to first line of menu (saved at the start of draw_export_menu)
 
     # Move cursor down, to 2 lines below the menu
-    tput cud $((menu_lines + 1))
+    tput cud $((menu_lines + 2))
 
     # Clear line in case a message was printed here before
     tput el
