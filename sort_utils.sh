@@ -33,7 +33,7 @@ print_msg_below_menu() {
 
 
 draw_export_menu() {
-    local options=("Export as neatly formatted TXT" "Export as raw data CSV" "Quit")
+    local options=("Export as neatly formatted TXT" "Export as raw data CSV\n" "Quit")
     local selected=0
     local menu_lines=${#options[@]}
 
@@ -48,7 +48,7 @@ draw_export_menu() {
             if [[ $i -eq $selected ]]; then
                 echo -e "\033[7m> ${options[i]}\033[0m"  # Highlight selected option
             else
-                echo "  ${options[i]}"
+                echo -e "  ${options[i]}"
             fi
         done
 

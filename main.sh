@@ -325,10 +325,10 @@ function menu() {
                 bash delete_patron.sh 
                 ;;
             4)
-                ./sort_by_lastname.sh
+                bash sort_patron_lname.sh
                 ;;
             5)
-                ./sort_by_id.sh
+                bash sort_patron_id.sh
                 ;;
             6)
                 bash sort_patron_joined.sh
