@@ -11,7 +11,7 @@ MENU_PROMPT=">"
 
 # Draws the header if enabled
 menu_draw_header() {
-    $SHOW_HEADER && echo -e "\033[1m$HEADER_TEXT\033[0m"
+    $SHOW_HEADER && echo -e "\033[1m$HEADER_TEXT\033[0m\n"
 }
 
 # Draws the header if enabled (fancy version)
@@ -29,14 +29,14 @@ menu_draw_fancy_header() {
 
         printf '%*s' "$pad_side" '' | tr ' ' "$padding_char"
         printf '%s' "$decorated"
-        printf '%*s\n' "$((pad_side + pad_extra))" '' | tr ' ' "$padding_char"
+        printf '%*s\n\n' "$((pad_side + pad_extra))" '' | tr ' ' "$padding_char"
     }
 }
 
 
-# Displays a temporary message if enabled
+# Displays a temporary message if $TEMP_MESSAGE is not empty
 menu_draw_temp_message() {
-    $SHOW_TEMP_MESSAGE && echo -e "\033[33m$TEMP_MESSAGE\033[0m"
+    [[ -n $TEMP_MESSAGE ]] && echo -e "\033[33m$TEMP_MESSAGE\033[0m\n"
 }
 
 # Draws the menu items with cursor highlighting
@@ -95,12 +95,12 @@ menu_loop() {
 }
 
 # Main wrapper to run the menu
-menu() {
+draw_menu() {
     HEADER_TEXT="$1"
-    SHOW_HEADER=true
-    SHOW_TEMP_MESSAGE="$2"
-    TEMP_MESSAGE="$3"
-    shift 3    # shift remaining args to $1, $2, ...
+    # SHOW_HEADER="$2"
+    # SHOW_TEMP_MESSAGE="$2"
+    # TEMP_MESSAGE="$2"
+    shift 1    # shift remaining args to $1, $2, ...
     MENU_ITEMS=("$@")
 
     SELECTED=0
@@ -110,4 +110,4 @@ menu() {
 # menu "$@" 
 
 # example use:
-# menu "Main Menu" true "Welcome!" "Register" "Login" "Exit"
+# menu "Main Menu" "Register" "Login" "Exit"

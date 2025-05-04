@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function printHeader(){
+function printHeader() {
     clear
     echo -e "\t\t ${choices[$key]}!"
     echo -e "==================================="
@@ -37,7 +37,7 @@ function addNew() {
         while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Birth Date Format is wrong."
             read -r -p "Birth Date (MM-DD-YYYY):" bdate
-        done     
+        done
         read -r -p "Membership type (Student / Public):" memberType
         while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
 
@@ -48,7 +48,7 @@ function addNew() {
         while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Joined Date Format is wrong."
             read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
-        done 
+        done
 
         echo "Press (q) to return to Patron Maintenance Menu."
         read -r -p "Add another new patron details? (y)es or (q)uit :" continue
@@ -56,16 +56,13 @@ function addNew() {
         #     then echo "yes"
         # fi
         #echo -e "PatronID:FName:LName:MobileNum:BirthDate:Type:JoinedDate">>patron.txt
-        echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate">>patron.txt
+        echo -e "$pID:$fname:$lname:$phnum:$bdate:$memberType:$joinedDate" >>patron.txt
         menu
     done
 
 }
 
-
-
-
-function searchPatron(){
+function searchPatron() {
     # clear
     # echo "Search Patron Details"
     read -r -p "Enter Patron ID: " id
@@ -74,7 +71,7 @@ function searchPatron(){
 
     #if line found
     if [[ -n "$line" ]]; then
-        IFS=: read -r -r id fname lname phone bdate member jdate <<< "$line"
+        IFS=: read -r -r id fname lname phone bdate member jdate <<<"$line"
 
         clear
 
@@ -87,7 +84,7 @@ function searchPatron(){
         echo "Birth Date (DD-MM-YYYY): $bdate"
         echo "Membership Type (Student/Public): $member"
         echo "Joined Date (DD-MM-YYYY): $jdate"
-    else	
+    else
         clear
         echo "No Patron with ID $id Found!"
     fi
@@ -98,15 +95,14 @@ function searchPatron(){
     if [[ "${choice,,}" == "y" ]]; then
         searchPatron
     elif [[ "${choice,,}" == "q" ]]; then
-    menu
+        menu
     fi
 
     # echo ""
-# done
+    # done
 }
 
-
-function updatePatron(){
+function updatePatron() {
     # clear
     # echo "Update a Patron Details"
     read -r -p "Enter Patron ID: " id
@@ -116,7 +112,7 @@ function updatePatron(){
 
     #if line found
     if [[ -n "$line" ]]; then
-        IFS=: read -r -r id fname lname phone bdate member jdate <<< "$line"
+        IFS=: read -r -r id fname lname phone bdate member jdate <<<"$line"
 
         clear
 
@@ -181,10 +177,10 @@ function updatePatron(){
         if [[ "${choice,,}" == "y" ]]; then
             sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
         elif [[ "${choice,,}" == "q" ]]; then
-        menu
+            menu
         fi
 
-    else	
+    else
         clear
         echo "No Patron with ID $id Found!"
         printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
@@ -192,58 +188,46 @@ function updatePatron(){
         read -r -n 1 -s
     fi
 
-
 }
 
-
-
-
-function menu(){
+function menu() {
     clear
-echo "Patron Maintenance Menu"
-declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
-declare -A choices
-choices["A"]="Add New Patron Details"
-choices["S"]="Search a Patron (by Patron ID)"
-choices["U"]="Update a Patron Details"
-choices["D"]="Delete a Patron Details"
-choices["L"]="Sort Patrons by Last Name"
-choices["P"]="Sort Patrons by Patron ID"
-choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
-choices["Q"]="Exit from Program"
+    echo "Patron Maintenance Menu"
+    declare -a keys=("A" "S" "U" "D" "L" "P" "J" "Q")
+    declare -A choices
+    choices["A"]="Add New Patron Details"
+    choices["S"]="Search a Patron (by Patron ID)"
+    choices["U"]="Update a Patron Details"
+    choices["D"]="Delete a Patron Details"
+    choices["L"]="Sort Patrons by Last Name"
+    choices["P"]="Sort Patrons by Patron ID"
+    choices["J"]="Sort Patrons by Joined Date (Newest to Oldest Date)"
+    choices["Q"]="Exit from Program"
 
+    for key in "${keys[@]}"; do
+        if [ "$key" == "Q" ]; then
+            echo -e ""
+        fi
+        echo "$key - ${choices[$key]}"
 
+    done
 
-for key in "${keys[@]}"; do
-     if [ "$key" == "Q" ];
-     then echo -e ""
-     fi
-    echo "$key - ${choices[$key]}"
+    read -r -p "Please select a choice:" key
 
-done
+    key=${key^^}
 
-read -r -p "Please select a choice:" key
-
-key=${key^^}
-
-
-
-     if [ "$key" == "A" ];
-     #     if [ "$key" == "A" ] || [ "$key" == "a" ];
-
- then   printHeader
-         addNew
-
-
-     elif [ "$key" == "S" ]; then
+    if [ "$key" == "A" ]; then #     if [ "$key" == "A" ] || [ "$key" == "a" ];
         printHeader
-    searchPatron
-elif [ "$key" == "U" ]; then
-        printHeader
-    updatePatron
-elif [ "$key" == "D" ]; then
-        printHeader
+        addNew
 
+    elif [ "$key" == "S" ]; then
+        printHeader
+        searchPatron
+    elif [ "$key" == "U" ]; then
+        printHeader
+        updatePatron
+    elif [ "$key" == "D" ]; then
+        printHeader
 
     elif [ "$key" == "L" ]; then
         printHeader
@@ -259,12 +243,13 @@ elif [ "$key" == "D" ]; then
     else
         echo "Invalid choice: $key"
         waitMessage
-    menu
+        menu
 
+    fi
+}
 
+# Display splash screen once on program load
+# source splash.sh
 
-     fi
- }
-
+# Start program main loop
 menu
-
