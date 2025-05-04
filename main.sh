@@ -31,18 +31,28 @@ attempts=0
 
 # }
 
-
+PATRON_FILE="patron.txt"
 function addNew() {
 
     continue="y"
     while [[ "$continue" == "y" ]]; do
         clear
         printHeader "Add New Patron Details" 
-        read -r -p "Patron ID:" pID
-        while [[ -z "$pID" ]]; do
-            echo -e "Sorry the Patron ID cannot left blank."
-            read -r -p "Patron ID:" pID
-        done
+    while true; do
+        read -r -p "Patron ID (format P****): " pID
+
+        if [[ ! "$pID" =~ ^P[0-9]{4}$ ]]; then
+            echo -e "Invalid Patron ID format. Please use 'P****' format."
+            continue
+        fi
+
+        if grep -q "^$pID:" "$PATRON_FILE"; then
+            echo -e "Patron ID already exists."
+            continue
+        fi
+
+        break  # valid and unique ID
+    done
         read -r -p "First Name:" fname
         while [[ -z "$fname" ]]; do
             echo -e "Sorry the First Name cannot left blank."
