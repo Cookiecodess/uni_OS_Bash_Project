@@ -6,7 +6,7 @@ tput civis
 rows=$(tput lines)
 cols=$(tput cols)
 
-# (what the logo should look like)
+# (this is what the logo should look like)
 # '       _             '
 # '      / \\   ____    '
 # '     / _ \\ |   //   '
@@ -14,6 +14,7 @@ cols=$(tput cols)
 # '   /_/   \_\|_//     '
 # '                     '
 # '     A R K I V E     '
+# (the extra backslashes in the string are escape characters)
 logo=(
 '       _               '
 '      / \\\\   ____    '
