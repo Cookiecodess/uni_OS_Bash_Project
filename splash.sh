@@ -1,35 +1,58 @@
 #!/bin/bash
 
-draw_splash() {
-    local title="${1:-Welcome}"
-    local subtitle="${2:-Press any key to continue...}"
-    local width="${3:-$(tput cols)}"
-    local height="${4:-$(tput lines)}"
+clear
+tput civis
 
-    tput civis
-    clear
+rows=$(tput lines)
+cols=$(tput cols)
 
-    local center_y=$((height / 2 - 1))
-    local title_line="[ $title ]"
-    local subtitle_line="$subtitle"
+# (what the logo should look like)
+# '       _             '
+# '      / \\   ____    '
+# '     / _ \\ |   //   '
+# '    / ___ \\| ||     '
+# '   /_/   \_\|_//     '
+# '                     '
+# '     A R K I V E     '
+logo=(
+'       _               '
+'      / \\\\   ____    '
+'     / _ \\\\ |   //   '
+'    / ___ \\\\| ||     '
+'   /_/   \\_\\|_//     '
+'                     '
+'     A R K I V E     '
+)
 
-    local title_len=${#title_line}
-    local subtitle_len=${#subtitle_line}
+slogan="Tracking with style :)"
+instruction="Press any key to start..."
 
-    local title_x=$(( (width - title_len) / 2 ))
-    local subtitle_x=$(( (width - subtitle_len) / 2 ))
+# Total vertical space needed
+total_lines=$(( ${#logo[@]} + 2 + 1 ))
+start_row=$(( (rows - total_lines) / 2 ))
 
-    for ((i=0; i<center_y-1; i++)); do echo ""; done
+# Print logo centered
+for i in "${!logo[@]}"; do
+    line="${logo[$i]}"
+    padding=$(( (cols - ${#line}) / 2 ))
+    tput cup $((start_row + i)) $padding
+    echo -e "\033[1;36m$line\033[0m"
+done
 
-    printf "%*s\n" "$title_x" ""
-    printf "%*s%s\n" "$title_x" "" "$title_line"
-    printf "\n"
-    printf "%*s%s\n" "$subtitle_x" "" "$subtitle_line"
+# Print slogan
+slogan_row=$((start_row + ${#logo[@]} + 1))
+slogan_padding=$(( (cols - ${#slogan}) / 2 ))
+tput cup $slogan_row $slogan_padding
+echo -e "\033[1;32m$slogan\033[0m"
 
-    read -rsn1  # Wait for any key
-    clear
-    tput cnorm
-}
+# Print instruction
+instruction_row=$((slogan_row + 2))
+instruction_padding=$(( (cols - ${#instruction}) / 2 ))
+tput cup $instruction_row $instruction_padding
+echo -e "\033[0;37m$instruction\033[0m"
 
+# Wait for any key
+read -n 1 -s
 
-draw_splash "My Cool App" "Use arrow keys to navigate"
+tput cnorm
+clear

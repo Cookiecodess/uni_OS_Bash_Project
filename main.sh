@@ -418,5 +418,6 @@ function login() {
 }
 
 # menu
+./splash.sh
 
 login
