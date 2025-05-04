@@ -14,7 +14,8 @@ highlight=0
 function filter_patrons() {
     filtered=()
     for id in "${patrons[@]}"; do
-        if [[ "$id" == *"$search"* ]]; then
+        # convert both $id and $search to lowercase for case-insensitive search
+        if [[ "${id,,}" == *"${search,,}"* ]]; then
             filtered+=("$id")
         fi
     done
@@ -87,9 +88,13 @@ function draw_screen() {
 CYAN='\033[36m'
 RESET='\033[0m'
 
+# filter patrons
 filter_patrons
+
+# initial draw
 draw_screen
 
+# draw loop 
 while true; do
     IFS= read -rsn1 key
 

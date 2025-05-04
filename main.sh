@@ -417,6 +417,9 @@ function login() {
 }
 
 # menu
+
+# show welcome splash screen
 ./splash.sh
 
+# login page which leads to main program loop
 login
