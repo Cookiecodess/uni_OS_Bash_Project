@@ -213,21 +213,23 @@ function updatePatron() {
 
             printf "\nPress (q) to return to Patron Maintenance Menu.\n\n"
 
-            read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or (q)uit: " choice
+            read -n 1 -s -p "Are you sure you want to UPDATE the above Patron Details? (y)es or press any key to quit: " choice
             if [[ "${choice,,}" == "y" ]]; then
                 sed -i "/^$id:/s/.*/$id:$fname:$lname:$newphone:$newdate:$member:$jdate/" patron.txt
-            elif [[ "${choice,,}" == "q" ]]; then
-                menu
+            # elif [[ "${choice,,}" == "q" ]]; then
+            #     menu
             fi
 
         else
             clear
             echo "No Patron with ID $id Found!"
 
-            read -n 1 -s -p "\nPress (q) to return to Patron Maintenance Menu.\n\n" choice
-            if [[ "${choice,,}" == "q" ]]; then
-                menu
-            fi
+            read -n 1 -s -p "Press (y) to continue or press any key to return to Patron Maintenance Menu." choice
+            # if [[ "${choice,,}" == "q" ]]; then
+            #     menu
+            # else
+            # "$choice" == "y"
+            # fi
         fi
 
     done
@@ -337,6 +339,7 @@ function menu() {
                 ;;
             7)
                 echo "Goodbye!"
+                exit 1
                 break
                 ;;
             *)
@@ -409,6 +412,6 @@ function login() {
 
 }
 
-menu
+# menu
 
-# login
+login
