@@ -28,7 +28,7 @@ beep() {
 
 
 
-function printHeader() {
+function printHeader(){
     clear
 echo -e "\t ${choices[$key]}!"
 echo -e "===================================================="
@@ -67,7 +67,7 @@ printHeader
         while ! [[ "$bdate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Birth Date Format is wrong."
             read -r -p "Birth Date (MM-DD-YYYY):" bdate
-        done
+        done     
         read -r -p "Membership type (Student / Public):" memberType
         while [[ "$memberType" != "Student" && "$memberType" != "Public" ]]; do
 
@@ -78,7 +78,7 @@ printHeader
         while ! [[ "$joinedDate" =~ ^[0-1][0-9]-[0-3][0-9]-[0-9]{4}$ ]]; do
             echo -e "Sorry the Joined Date Format is wrong."
             read -r -p "Joined Date (MM-DD-YYYY):" joinedDate
-        done
+        done 
 
         echo "Press (q) to return to Patron Maintenance Menu."
         read -p "Add another new patron details? (y)es or (q)uit :" continue
@@ -212,7 +212,9 @@ function updatePatron(){
 
 
 
-function menu() {
+
+
+function menu(){
     clear
     echo -e "${GREEN}==========================================================="
 echo -e "\t Patron Maintenance Menu"
@@ -230,17 +232,17 @@ choices["Q"]="Exit from Program"
 
 
 
-    for key in "${keys[@]}"; do
-        if [ "$key" == "Q" ]; then
-            echo -e ""
-        fi
-        echo "$key - ${choices[$key]}"
+for key in "${keys[@]}"; do
+     if [ "$key" == "Q" ];
+     then echo -e ""
+     fi
+    echo "$key - ${choices[$key]}"
 
-    done
+done
 
-    read -r -p "Please select a choice:" key
+read -r -p "Please select a choice:" key
 
-    key=${key^^}
+key=${key^^}
 
 
 
@@ -252,13 +254,16 @@ choices["Q"]="Exit from Program"
 
 
      elif [ "$key" == "S" ]; then
-        printHeader
+        
     searchPatron
-elif [ "$key" == "U" ]; then
-        printHeader
+       
+    
+     elif [ "$key" == "U" ]; then
+        
     updatePatron
-elif [ "$key" == "D" ]; then
+     elif [ "$key" == "D" ]; then
         printHeader
+
 
     elif [ "$key" == "L" ]; then
         printHeader
@@ -274,10 +279,12 @@ elif [ "$key" == "D" ]; then
     else
         echo "Invalid choice: $key"
         waitMessage
-        menu
+    menu
 
-    fi
-}
+
+
+     fi
+ }
 
 
 function login(){
