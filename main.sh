@@ -255,7 +255,7 @@ key=${key^^}
      elif [ "$key" == "S" ]; then
         
     searchPatron
-        printHeader
+       
     
      elif [ "$key" == "U" ]; then
         
